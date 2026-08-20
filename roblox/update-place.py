@@ -44,8 +44,15 @@ def update(place: pathlib.Path) -> None:
         i = xml.find(marker)
         if i < 0:
             continue
-        j = xml.find(OPEN_TAG, i)
-        k = xml.find(CLOSE_TAG, j)
+        # Studio properties neserializuje abecedne - Source byva PRED Name.
+        # Hledame proto v celem <Properties> bloku tohohle itemu, ohranicene,
+        # aby se nikdy nechytil Source sousedniho skriptu.
+        props_start = xml.rfind("<Properties>", 0, i)
+        props_end = xml.find("</Properties>", i)
+        if props_start < 0 or props_end < 0:
+            sys.exit(f"{place}: skript {name} nema Properties blok - necekany format")
+        j = xml.find(OPEN_TAG, props_start, props_end)
+        k = xml.find(CLOSE_TAG, j, props_end) if j >= 0 else -1
         if j < 0 or k < 0:
             sys.exit(f"{place}: skript {name} nema Source - necekany format")
 
