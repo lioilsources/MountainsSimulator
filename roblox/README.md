@@ -38,7 +38,7 @@ nesmažeš nebo nepřejmenuješ; soubory s terénem jsou v .gitignore.
 | Vstup | Akce |
 |---|---|
 | myš | zaměřovač — letadlo se za ním dotáčí |
-| W / S | plyn / brzda (rychlost drží) |
+| W / S | plyn / brzda (rychlost drží; 18 km/h až Mach 1, strmhlav s boostem Mach 1.3) |
 | A / D | vybočení |
 | Space / LeftShift | nos nahoru / dolů |
 | pravé tlačítko | boost (stojí 25 z metru) |
@@ -47,6 +47,7 @@ nesmažeš nebo nepřejmenuješ; soubory s terénem jsou v .gitignore.
 | R | respawn |
 
 Skimming nízko nad terénem nabíjí boost, náraz nad 15 m/s sebere rychlost.
+Spawn je ~2800 studů jižně od hlavního vrcholu arény, nosem přímo na něj.
 Kompas nahoře ukazuje kurz a vrcholy v okolí; když míříš na některý
 (±10°), vypíše jeho jméno, výšku a vzdálenost v reálných km.
 

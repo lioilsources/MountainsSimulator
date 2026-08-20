@@ -22,11 +22,14 @@ local arenaKey = workspace:GetAttribute("ArenaKey") or "beskydy"
 local arena = Mountains.get(arenaKey) or Mountains.get(Mountains.order[1])
 
 -- === konstanty (DoggioWars, rychlosti v m/s) ==============================
-local SCALE      = 3      -- studu na metr letu; 40 m/s -> 120 studu/s
-local SPEED_MAX  = 40
-local SPEED_MIN  = 5
-local SPEED_BOOST = 60
-local THROTTLE_UP, THROTTLE_DOWN = 8, 10
+local SCALE      = 3      -- studu na metr letu
+-- Rychlostni obalka je zamerne obri (rozhodnuti 2026-08-20): plyn je volic
+-- od kochani po nadzvukovy slalom, zadny realismus. DoggioWars mel strop
+-- 40 m/s - naladeny na ostrovy o 340 m, ne na 50km pohori.
+local SPEED_MAX  = 350    -- m/s; setrvaly plyn tesne nad Mach 1
+local SPEED_MIN  = 5      -- 18 km/h - kochani
+local SPEED_ABS  = 450    -- tvrdy strop (Mach 1.3 ve strmhlavu s boostem)
+local MACH1      = 343
 local TURN_SPEED = 1.5
 local PITCH_RATE = 1.2
 local PITCH_MAX  = 0.6
@@ -120,20 +123,34 @@ local function adoptCharacter(char)
 end
 
 -- === spawn ===============================================================
--- Startujeme nad arenou, vysoko nad nejvyssim bodem, nosem k jejimu stredu.
+-- Kdyz ma arena hlavni vrchol (prvni "major" POI - u Everestu Everest),
+-- startujeme ~2800 studu jizne od nej, kousek nad jeho vyskou, nosem primo
+-- na nej. Zadne doletavani pres pul areny.
 local function spawnPoint()
+	for _, p in ipairs(arena.pois or {}) do
+		if p.major then
+			return p.pos + Vector3.new(0, 350, 2800), p
+		end
+	end
 	local top = arena.regionPosition.Y + arena.regionSize.Y / 2
 	return Vector3.new(
 		arena.regionPosition.X,
 		top + 120,
 		arena.regionPosition.Z + arena.regionSize.Z * 0.35
-	)
+	), nil
 end
 
 local function resetFlight()
-	pos = spawnPoint()
-	-- Roblox ma forward -Z: spawn je na +Z od stredu, takze yaw 0 miri dovnitr.
-	yaw, pitch, roll = 0, -0.05, 0
+	local at, peak = spawnPoint()
+	pos = at
+	if peak then
+		local d = peak.pos - pos
+		-- Roblox forward je -Z: yaw z vektoru na vrchol.
+		yaw = math.atan2(-d.X, -d.Z)
+	else
+		yaw = 0
+	end
+	pitch, roll = -0.05, 0
 	aimYaw, aimPitch = yaw, pitch
 	speed = 25
 	boostMeter, boostTime = 50, 0
@@ -447,8 +464,9 @@ UserInputService.InputBegan:Connect(function(input, processed)
 		end
 	elseif input.UserInputType == Enum.UserInputType.MouseButton2 then
 		if boostTime <= 0 and boostMeter >= BOOST_COST then
-			boostMeter = boostMeter - (BOOST_COST)
+			boostMeter = boostMeter - BOOST_COST
 			boostTime = BOOST_TIME
+			speed = math.min(speed + 40, SPEED_ABS)
 		end
 	end
 end)
@@ -472,9 +490,12 @@ local function step(dt)
 	if not alive then return end
 	dt = math.min(dt, 0.1)
 
-	-- plyn: rychlost drzi tam, kam ji hrac nastavi
-	if keys[Enum.KeyCode.W] then speed = speed + THROTTLE_UP * dt end
-	if keys[Enum.KeyCode.S] then speed = speed - THROTTLE_DOWN * dt end
+	-- plyn: rychlost drzi tam, kam ji hrac nastavi. Akcelerace je umerna
+	-- rychlosti (5 -> 350 m/s za ~10 s), jinak by pres tak siroky rozsah
+	-- trvalo dorovnani plynu skoro minutu.
+	local accel = boostTime > 0 and 3 or 1
+	if keys[Enum.KeyCode.W] then speed = speed + math.max(10, speed * 0.45) * accel * dt end
+	if keys[Enum.KeyCode.S] then speed = speed - math.max(14, speed * 0.6) * dt end
 
 	-- vyboceni zamerovace klavesami (A/D) vedle mysi
 	if keys[Enum.KeyCode.A] then aimYaw = wrapAngle(aimYaw + TURN_SPEED * 0.6 * dt) end
@@ -494,24 +515,24 @@ local function step(dt)
 	local targetRoll = math.clamp(-dYaw * 1.5, -BANK_MAX, BANK_MAX)
 	roll = roll + (math.clamp(targetRoll - roll, -ROLL_SPEED * dt, ROLL_SPEED * dt))
 
-	-- strmhlav zrychluje, stoupani krvaci rychlost; plny plyn vykryje 70 %
+	-- strmhlav zrychluje, stoupani krvaci rychlost; plny plyn vykryje 70 %.
+	-- Oboji umerne rychlosti, aby "feel" drzel v cele obalce.
 	local topSpeed = SPEED_MAX
 	if boostTime > 0 then
-		boostTime = boostTime - (dt)
-		topSpeed = SPEED_BOOST
-		speed = math.max(speed, SPEED_BOOST)
+		boostTime = boostTime - dt
+		topSpeed = SPEED_ABS
 	end
 	if pitch < -DIVE_START then
-		speed = speed + ((-pitch - DIVE_START) * 24 * dt)
+		speed = speed + (-pitch - DIVE_START) * (24 + speed * 0.5) * dt
 	elseif pitch > 0 then
-		local bleed = pitch * 18 * dt
+		local bleed = pitch * (18 + speed * 0.35) * dt
 		if keys[Enum.KeyCode.W] then bleed = bleed * 0.3 end
-		speed = speed - (bleed)
+		speed = speed - bleed
 	end
 	if speed > topSpeed then
 		speed = math.max(topSpeed, speed - OVERSPEED_DECAY * dt)
 	end
-	speed = math.clamp(speed, SPEED_MIN, SPEED_MAX * 1.5)
+	speed = math.clamp(speed, SPEED_MIN, SPEED_ABS)
 
 	-- posun
 	local orient = CFrame.fromEulerAnglesYXZ(pitch, yaw, roll)
@@ -584,7 +605,12 @@ local function step(dt)
 		down.Position.Y - (arena.regionPosition.Y - arena.regionSize.Y / 2)) or nil
 	altLabel.Text = string.format("ALT  %5d m n.m.%s", math.floor(altM),
 		groundM and string.format("   (%d m nad zemi)", math.max(0, math.floor(altM - groundM))) or "")
-	spdLabel.Text = string.format("SPD  %5.0f km/h", speed * 3.6)
+	local mach = speed / MACH1
+	if mach >= 0.4 then
+		spdLabel.Text = string.format("SPD  %5.0f km/h   M %.2f", speed * 3.6, mach)
+	else
+		spdLabel.Text = string.format("SPD  %5.0f km/h", speed * 3.6)
+	end
 	bstLabel.Text = string.format("BST  %3d%%%s", math.floor(boostMeter), boostTime > 0 and "  BOOST" or "")
 
 	crosshair.Position = UDim2.fromScale(0.5, 0.5)
