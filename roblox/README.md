@@ -8,8 +8,10 @@ po úpravě zdrojáků spusť `./build.sh`.
 ./build.sh everest    # aréna everest + lobby
 ```
 
-Vznikne `MountainsSimulator.rbxlx` (jedna aréna) a `MountainsLobby.rbxlx`
-(výběr kontinentu). Otevři je ve Studiu přes File → Open from File.
+Vznikne `MountainsSimulator-<aréna>.rbxlx` a `MountainsLobby.rbxlx` (výběr
+kontinentu). Otevři je ve Studiu přes File → Open from File. Po importu
+terénu place ulož (Cmd+S) — build.sh ho pak odmítne přepsat, dokud ho
+nesmažeš nebo nepřejmenuješ; soubory s terénem jsou v .gitignore.
 
 ## Soubory
 

@@ -40,10 +40,19 @@ close_service() { printf '\t</Item>\n'; }
 ARENA_SRC=$(mktemp)
 sed "s/^local DEFAULT_ARENA = .*/local DEFAULT_ARENA = \"$ARENA\"/" arena-setup.server.lua > "$ARENA_SRC"
 
-OUT="MountainsSimulator.rbxlx"
+OUT="MountainsSimulator-$ARENA.rbxlx"
+
+# Pojistka: place s naimportovanym terenem ma megabajty. Prepsat ho buildem
+# by znamenalo prijit o rucni praci v Terrain Editoru.
+if [ -f "$OUT" ] && [ "$(wc -c < "$OUT" | tr -d ' ')" -gt 1000000 ]; then
+	echo "STOP: $OUT vypada, ze uz obsahuje naimportovany teren." >&2
+	echo "Prejmenuj/zalohuj ho, nebo ho smaz, pokud chces stavet znovu." >&2
+	exit 1
+fi
+
 {
 open_place
-open_service Workspace RBXWS
+printf '\t<Item class="Workspace" referent="RBXWS">\n\t\t<Properties>\n\t\t\t<string name="Name">Workspace</string>\n\t\t\t<bool name="StreamingEnabled">true</bool>\n\t\t</Properties>\n'
 cat <<'XML'
 		<Item class="SpawnLocation" referent="RBXSPAWN">
 			<Properties>

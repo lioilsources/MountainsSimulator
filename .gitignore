@@ -10,5 +10,6 @@ terrain-fetch/terrain-fetch
 # Sidecar JSONy se naopak commituji: jsou to verzovane herni konstanty.
 terrain-fetch/out/*.png
 
-# Studio lock soubory
+# Studio lock soubory a areny s naimportovanym terenem (megabajty voxelu)
 roblox/*.rbxlx.lock
+roblox/MountainsSimulator-*.rbxlx
