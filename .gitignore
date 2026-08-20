@@ -13,3 +13,4 @@ terrain-fetch/out/*.png
 # Studio lock soubory a areny s naimportovanym terenem (megabajty voxelu)
 roblox/*.rbxlx.lock
 roblox/MountainsSimulator-*.rbxlx
+roblox/*.bak

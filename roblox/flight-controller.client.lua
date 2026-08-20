@@ -179,8 +179,255 @@ local altLabel = newLabel(UDim2.fromOffset(420, 24), UDim2.fromOffset(18, 40), 1
 local spdLabel = newLabel(UDim2.fromOffset(420, 24), UDim2.fromOffset(18, 62), 18)
 local bstLabel = newLabel(UDim2.fromOffset(420, 24), UDim2.fromOffset(18, 84), 18)
 local hintLabel = newLabel(UDim2.fromOffset(600, 22), UDim2.new(0, 18, 1, -30), 15)
-hintLabel.Text = "W/S plyn - mys smer - Space/Shift nos - RMB boost - V kamera - R respawn"
+hintLabel.Text = "W/S plyn - mys smer - Space/Shift nos - RMB boost - M mapa - V kamera - R respawn"
 hintLabel.TextTransparency = 0.35
+
+
+-- === kompas a POI ========================================================
+-- Kurz 0 = sever (-Z, horni okraj heightmapy). POI prichazeji z Mountains.lua
+-- uz prepocitane do studu, vcetne prichyceni na lokalni vrchol DEM.
+local COMPASS_FOV = 120  -- stupnu viditelnych na pasce
+local GOLD = Color3.fromRGB(240, 200, 90)
+local GREY = Color3.fromRGB(200, 205, 215)
+local pois = arena.pois or {}
+
+local function headingDeg()
+	return math.deg(-yaw) % 360
+end
+
+local function angleDiffDeg(a, b)
+	return (a - b + 180) % 360 - 180
+end
+
+local compass = Instance.new("Frame")
+compass.Size = UDim2.fromOffset(560, 48)
+compass.Position = UDim2.new(0.5, 0, 0, 8)
+compass.AnchorPoint = Vector2.new(0.5, 0)
+compass.BackgroundColor3 = Color3.fromRGB(20, 24, 30)
+compass.BackgroundTransparency = 0.45
+compass.BorderSizePixel = 0
+compass.ClipsDescendants = true
+compass.Parent = gui
+
+local centerMark = Instance.new("Frame")
+centerMark.Size = UDim2.fromOffset(2, 10)
+centerMark.Position = UDim2.new(0.5, -1, 0, 0)
+centerMark.BackgroundColor3 = Color3.fromRGB(255, 240, 180)
+centerMark.BorderSizePixel = 0
+centerMark.Parent = compass
+
+local CARDINALS = { [0] = "N", [45] = "NE", [90] = "E", [135] = "SE",
+	[180] = "S", [225] = "SW", [270] = "W", [315] = "NW" }
+
+local ticks = {}
+for a = 0, 345, 15 do
+	local l = Instance.new("TextLabel")
+	l.AnchorPoint = Vector2.new(0.5, 0)
+	l.Size = UDim2.fromOffset(44, 16)
+	l.BackgroundTransparency = 1
+	l.Font = Enum.Font.Code
+	local name = CARDINALS[a]
+	l.Text = name or tostring(a)
+	l.TextSize = name and 16 or 11
+	l.TextColor3 = name and Color3.fromRGB(240, 240, 230) or Color3.fromRGB(140, 148, 158)
+	l.Visible = false
+	l.Parent = compass
+	ticks[#ticks + 1] = { angle = a, label = l }
+end
+
+local poiMarks = {}
+for _, p in ipairs(pois) do
+	local l = Instance.new("TextLabel")
+	l.AnchorPoint = Vector2.new(0.5, 0)
+	l.Size = UDim2.fromOffset(120, 16)
+	l.Position = UDim2.new(0.5, 0, 0, 28)
+	l.BackgroundTransparency = 1
+	l.Font = Enum.Font.Code
+	l.Text = "^ " .. p.name
+	l.TextSize = 12
+	l.TextColor3 = p.major and GOLD or GREY
+	l.TextStrokeTransparency = 0.5
+	l.Visible = false
+	l.Parent = compass
+	poiMarks[#poiMarks + 1] = l
+end
+
+local lookLabel = Instance.new("TextLabel")
+lookLabel.AnchorPoint = Vector2.new(0.5, 0)
+lookLabel.Size = UDim2.fromOffset(560, 20)
+lookLabel.Position = UDim2.new(0.5, 0, 0, 58)
+lookLabel.BackgroundTransparency = 1
+lookLabel.Font = Enum.Font.Code
+lookLabel.TextSize = 16
+lookLabel.TextColor3 = Color3.fromRGB(235, 235, 225)
+lookLabel.TextStrokeTransparency = 0.4
+lookLabel.Parent = gui
+
+local function updateCompass()
+	local heading = headingDeg()
+	for _, t in ipairs(ticks) do
+		local d = angleDiffDeg(t.angle, heading)
+		if math.abs(d) <= COMPASS_FOV / 2 then
+			t.label.Visible = true
+			t.label.Position = UDim2.new(0.5 + d / COMPASS_FOV, 0, 0, 10)
+		else
+			t.label.Visible = false
+		end
+	end
+
+	local bestPoi, bestAbs, bestDist
+	for i, p in ipairs(pois) do
+		local dx, dz = p.pos.X - pos.X, p.pos.Z - pos.Z
+		local bearing = math.deg(math.atan2(dx, -dz)) % 360
+		local d = angleDiffDeg(bearing, heading)
+		local mark = poiMarks[i]
+		if math.abs(d) <= COMPASS_FOV / 2 then
+			mark.Visible = true
+			mark.Position = UDim2.new(0.5 + d / COMPASS_FOV, 0, 0, 28)
+		else
+			mark.Visible = false
+		end
+		if math.abs(d) <= 10 then
+			local distKm = math.sqrt(dx * dx + dz * dz) / arena.studsPerMeterXZ / 1000
+			if not bestPoi or math.abs(d) < bestAbs then
+				bestPoi, bestAbs, bestDist = p, math.abs(d), distKm
+			end
+		end
+	end
+	if bestPoi then
+		lookLabel.Text = string.format("%03d  |  %s  %d m - %.1f km",
+			math.floor(heading + 0.5) % 360, bestPoi.name, bestPoi.elevM, bestDist)
+	else
+		lookLabel.Text = string.format("%03d", math.floor(heading + 0.5) % 360)
+	end
+end
+
+-- === mapa (M) ============================================================
+-- Podklad je hruby vyskovy rastr zabaleny v Mountains.lua (hex retezce) --
+-- zadne image assety, vse offline. Bunky se stavi az pri prvnim otevreni.
+local mapFrame, mapPlayer
+
+local function hypso(v)
+	local stops = {
+		{ 0.00, 40, 66, 48 }, { 0.30, 88, 104, 60 }, { 0.55, 126, 104, 76 },
+		{ 0.78, 158, 148, 138 }, { 1.00, 242, 244, 248 },
+	}
+	for i = 2, #stops do
+		if v <= stops[i][1] then
+			local a, b = stops[i - 1], stops[i]
+			local t = (v - a[1]) / (b[1] - a[1])
+			return Color3.fromRGB(a[2] + (b[2] - a[2]) * t, a[3] + (b[3] - a[3]) * t, a[4] + (b[4] - a[4]) * t)
+		end
+	end
+	return Color3.fromRGB(242, 244, 248)
+end
+
+local function buildMap()
+	mapFrame = Instance.new("Frame")
+	mapFrame.Size = UDim2.fromScale(0.62, 0.74)
+	mapFrame.Position = UDim2.fromScale(0.5, 0.53)
+	mapFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+	mapFrame.BackgroundColor3 = Color3.fromRGB(12, 15, 20)
+	mapFrame.BorderSizePixel = 0
+	mapFrame.Visible = false
+	mapFrame.Parent = gui
+
+	local grid = arena.map
+	if grid then
+		local ratio = Instance.new("UIAspectRatioConstraint")
+		ratio.AspectRatio = grid.w / grid.h
+		ratio.Parent = mapFrame
+		for yy = 1, grid.h do
+			local row = grid.rows[yy]
+			for xx = 1, grid.w do
+				local v = tonumber(string.sub(row, xx * 2 - 1, xx * 2), 16) / 255
+				local cell = Instance.new("Frame")
+				cell.BorderSizePixel = 0
+				cell.Size = UDim2.fromScale(1 / grid.w, 1 / grid.h)
+				cell.Position = UDim2.fromScale((xx - 1) / grid.w, (yy - 1) / grid.h)
+				cell.BackgroundColor3 = hypso(v)
+				cell.Parent = mapFrame
+			end
+		end
+	end
+
+	local north = Instance.new("TextLabel")
+	north.Size = UDim2.fromOffset(24, 20)
+	north.Position = UDim2.new(0.5, -12, 0, 2)
+	north.BackgroundTransparency = 1
+	north.Font = Enum.Font.Code
+	north.Text = "N"
+	north.TextSize = 18
+	north.TextColor3 = Color3.fromRGB(240, 240, 230)
+	north.TextStrokeTransparency = 0.2
+	north.Parent = mapFrame
+
+	for _, p in ipairs(pois) do
+		local fx = 0.5 + p.pos.X / arena.regionSize.X
+		local fy = 0.5 + p.pos.Z / arena.regionSize.Z
+
+		local dot = Instance.new("Frame")
+		dot.AnchorPoint = Vector2.new(0.5, 0.5)
+		dot.Size = UDim2.fromOffset(p.major and 10 or 7, p.major and 10 or 7)
+		dot.Position = UDim2.fromScale(fx, fy)
+		dot.BackgroundColor3 = p.major and GOLD or GREY
+		dot.BorderSizePixel = 0
+		dot.Parent = mapFrame
+		local corner = Instance.new("UICorner")
+		corner.CornerRadius = UDim.new(1, 0)
+		corner.Parent = dot
+
+		local tag = Instance.new("TextLabel")
+		tag.AnchorPoint = Vector2.new(0, 0.5)
+		tag.Size = UDim2.fromOffset(170, 24)
+		tag.Position = UDim2.new(fx, 8, fy, 0)
+		tag.BackgroundTransparency = 1
+		tag.Font = Enum.Font.Code
+		tag.TextXAlignment = Enum.TextXAlignment.Left
+		tag.Text = string.format("%s %d", p.name, p.elevM)
+		tag.TextSize = p.major and 14 or 12
+		tag.TextColor3 = p.major and GOLD or GREY
+		tag.TextStrokeTransparency = 0.2
+		tag.Parent = mapFrame
+	end
+
+	mapPlayer = Instance.new("TextLabel")
+	mapPlayer.AnchorPoint = Vector2.new(0.5, 0.5)
+	mapPlayer.Size = UDim2.fromOffset(22, 22)
+	mapPlayer.BackgroundTransparency = 1
+	mapPlayer.Font = Enum.Font.GothamBold
+	mapPlayer.Text = "^"
+	mapPlayer.TextSize = 20
+	mapPlayer.TextColor3 = Color3.fromRGB(255, 90, 70)
+	mapPlayer.TextStrokeTransparency = 0.1
+	mapPlayer.Parent = mapFrame
+
+	local title = Instance.new("TextLabel")
+	title.Size = UDim2.new(1, 0, 0, 22)
+	title.Position = UDim2.new(0, 0, 1, 2)
+	title.BackgroundTransparency = 1
+	title.Font = Enum.Font.Code
+	title.Text = string.format("%s - %s - M zavre", arena.name, arena.continent)
+	title.TextSize = 14
+	title.TextColor3 = Color3.fromRGB(170, 180, 190)
+	title.Parent = mapFrame
+end
+
+local function toggleMap()
+	if not mapFrame then
+		buildMap()
+	end
+	mapFrame.Visible = not mapFrame.Visible
+end
+
+local function updateMapPlayer()
+	if mapFrame and mapFrame.Visible and mapPlayer then
+		mapPlayer.Position = UDim2.fromScale(
+			0.5 + pos.X / arena.regionSize.X,
+			0.5 + pos.Z / arena.regionSize.Z)
+		mapPlayer.Rotation = headingDeg()
+	end
+end
 
 -- === vstup ===============================================================
 UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
@@ -193,6 +440,8 @@ UserInputService.InputBegan:Connect(function(input, processed)
 		keys[input.KeyCode] = true
 		if input.KeyCode == Enum.KeyCode.V then
 			firstPerson = not firstPerson
+		elseif input.KeyCode == Enum.KeyCode.M then
+			toggleMap()
 		elseif input.KeyCode == Enum.KeyCode.R then
 			resetFlight()
 		end
@@ -339,6 +588,8 @@ local function step(dt)
 	bstLabel.Text = string.format("BST  %3d%%%s", math.floor(boostMeter), boostTime > 0 and "  BOOST" or "")
 
 	crosshair.Position = UDim2.fromScale(0.5, 0.5)
+	updateCompass()
+	updateMapPlayer()
 end
 
 player.CharacterAdded:Connect(function(char)

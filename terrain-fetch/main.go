@@ -179,6 +179,9 @@ func run(o runOpts) error {
 		}
 	}
 
+	pois := projectPOIs(p.POIs, p.BBox, z, g, outMPP, rbx)
+	mapGrid := buildMapGrid(g, min, max)
+
 	side := Sidecar{
 		Name: p.Name, Continent: p.Continent, Peak: p.Peak, PeakElevM: p.PeakElevM,
 		BBox:          [4]float64{p.BBox.LatMin, p.BBox.LonMin, p.BBox.LatMax, p.BBox.LonMax},
@@ -189,6 +192,8 @@ func run(o runOpts) error {
 		MetersPerPx: round4(outMPP),
 		WidthM:      round1(widthM), HeightM: round1(heightM),
 		Heightmap: filepath.Base(heightPath),
+		POIs:      pois,
+		Map:       &mapGrid,
 		Roblox:    rbx,
 		Source:    sourceName, Attribution: attribution,
 		Generator: "terrain-fetch",

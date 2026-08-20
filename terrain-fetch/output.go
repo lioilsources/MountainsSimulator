@@ -32,6 +32,8 @@ type Sidecar struct {
 	// ColormapMaterials lists what the colormap painted, with the exact RGBs
 	// the Terrain Editor must match against Terrain.MaterialColors.
 	ColormapMaterials []MaterialUse `json:"colormap_materials,omitempty"`
+	POIs              []SidecarPOI  `json:"pois,omitempty"`
+	Map               *MapGrid      `json:"map,omitempty"`
 	Roblox            RobloxMeta    `json:"roblox"`
 	Source            string        `json:"source"`
 	Attribution       string        `json:"attribution"`

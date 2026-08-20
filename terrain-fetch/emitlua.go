@@ -57,6 +57,21 @@ func emitLua(sidecarDir, outPath string) error {
 		fmt.Fprintf(&b, "\t\tterrainHeightStuds = %g,\n", r.TerrainHeightStuds)
 		fmt.Fprintf(&b, "\t\tverticalExaggeration = %g,\n", r.VerticalExaggeration)
 		fmt.Fprintf(&b, "\t\theightmap = %q,\n", s.Heightmap)
+		if len(s.POIs) > 0 {
+			b.WriteString("\t\tpois = {\n")
+			for _, poi := range s.POIs {
+				fmt.Fprintf(&b, "\t\t\t{name = %q, elevM = %g, major = %v, pos = Vector3.new(%g, %g, %g)},\n",
+					poi.Name, poi.ElevM, poi.Major, poi.XStuds, poi.YStuds, poi.ZStuds)
+			}
+			b.WriteString("\t\t},\n")
+		}
+		if s.Map != nil {
+			fmt.Fprintf(&b, "\t\tmap = {\n\t\t\tw = %d,\n\t\t\th = %d,\n\t\t\trows = {\n", s.Map.W, s.Map.H)
+			for _, row := range s.Map.Rows {
+				fmt.Fprintf(&b, "\t\t\t\t%q,\n", row)
+			}
+			b.WriteString("\t\t\t},\n\t\t},\n")
+		}
 		fmt.Fprintf(&b, "\t\tplaceId = %d, -- set PlaceID in presets.go once the Place is published\n", r.PlaceID)
 		b.WriteString("\t},\n")
 	}

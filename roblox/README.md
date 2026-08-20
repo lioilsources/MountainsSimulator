@@ -20,7 +20,8 @@ nesmažeš nebo nepřejmenuješ; soubory s terénem jsou v .gitignore.
 | `flight-controller.client.lua` | letový model, kamera, HUD s výškoměrem |
 | `arena-setup.server.lua` | fog a osvětlení per pohoří, kontrola importu terénu |
 | `lobby.client.lua` | výběr kontinentu → `TeleportService` |
-| `Mountains.lua` | **generované** konstanty ze sidecarů |
+| `Mountains.lua` | **generované** konstanty, POI vrcholů a mapový rastr ze sidecarů |
+| `update-place.py` | vymění skripty v uloženém place, terén nechá být |
 | `IMPORT.md` | **generovaný** tahák na import terénu |
 | `build.sh` | složí `.rbxlx` z výše uvedeného |
 
@@ -41,10 +42,28 @@ nesmažeš nebo nepřejmenuješ; soubory s terénem jsou v .gitignore.
 | A / D | vybočení |
 | Space / LeftShift | nos nahoru / dolů |
 | pravé tlačítko | boost (stojí 25 z metru) |
+| M | mapa arény s vrcholy (POI) |
 | V | kamera chase / first-person |
 | R | respawn |
 
 Skimming nízko nad terénem nabíjí boost, náraz nad 15 m/s sebere rychlost.
+Kompas nahoře ukazuje kurz a vrcholy v okolí; když míříš na některý
+(±10°), vypíše jeho jméno, výšku a vzdálenost v reálných km.
+
+## Aktualizace uloženého place
+
+Place s naimportovaným terénem má stovky MB — build.sh ho odmítá přepsat.
+Když se změní `.lua` zdrojáky nebo `Mountains.lua`:
+
+```bash
+./update-place.py MountainsSimulator-beskydy.rbxlx
+```
+
+Vymění jen zdrojáky skriptů (podle jména), terén nechá být, arénu v
+ArenaSetup zachová a vyrobí zálohu `.bak`. Place nesmí být zrovna otevřený
+ve Studiu. Kdyby v budoucnu přibyl **nový** skript (ne jen změna
+existujícího), updater ho nepřidá — musel by se vložit ve Studiu ručně,
+nebo znovu postavit place a přeimportovat terén.
 
 ## Varianta A: pět Places
 

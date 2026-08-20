@@ -6,6 +6,7 @@ import (
 	"image/color"
 	"image/png"
 	"math"
+	"strconv"
 	"testing"
 )
 
@@ -340,5 +341,91 @@ func TestEveryPresetIsSane(t *testing.T) {
 		if km/1000 < 20 || km/1000 > 60 {
 			t.Errorf("%s: crop is %.1f km wide, outside the planned 30-50 km", k, km/1000)
 		}
+	}
+}
+
+func TestPOISnapAndProjection(t *testing.T) {
+	// A 200x100 grid with one sharp summit off-centre.
+	g := newGrid(200, 100)
+	sx, sy := 130, 40
+	for y := 0; y < 100; y++ {
+		for x := 0; x < 200; x++ {
+			d := math.Hypot(float64(x-sx), float64(y-sy))
+			g.Data[y*200+x] = float32(2000 - d*10)
+		}
+	}
+	b := BBox{LatMin: 45.0, LonMin: 6.0, LatMax: 45.5, LonMax: 7.0}
+	rbx := buildRobloxMeta(40000, 20000, 800, 1200, 0.68, 16384, 0)
+	rbx.BaseElevationM = float64(g.Data[0]) // not used for min here; set explicitly
+	min, _ := g.minMax()
+	rbx.BaseElevationM = round1(float64(min))
+
+	// Catalog coordinates deliberately ~6 px off the true summit.
+	lonAt := func(px int) float64 { return 6.0 + float64(px)/199.0 }
+	latAt := func(py int) float64 { return 45.5 - 0.5*float64(py)/99.0 }
+	pois := projectPOIs([]POI{
+		{Name: "Summit", Lat: latAt(sy + 4), Lon: lonAt(sx - 5), ElevM: 2000, Major: true},
+		{Name: "Outside", Lat: 50, Lon: 20, ElevM: 1},
+	}, b, 12, g, 30, rbx)
+
+	if len(pois) != 1 {
+		t.Fatalf("got %d POIs, want 1 (outside one dropped)", len(pois))
+	}
+	p := pois[0]
+	if p.SnappedElevM != 2000 {
+		t.Errorf("snap missed the summit: elevation %v, want 2000", p.SnappedElevM)
+	}
+	wantX := (float64(sx)/199.0 - 0.5) * rbx.RegionSizeStuds[0]
+	wantZ := (float64(sy)/99.0 - 0.5) * rbx.RegionSizeStuds[2]
+	if math.Abs(p.XStuds-wantX) > 1 || math.Abs(p.ZStuds-wantZ) > 1 {
+		t.Errorf("projected to (%v, %v), want (%v, %v)", p.XStuds, p.ZStuds, wantX, wantZ)
+	}
+	if math.Abs(p.YStuds-(2000-float64(min))*0.68) > 1 {
+		t.Errorf("YStuds = %v", p.YStuds)
+	}
+}
+
+func TestPresetPOIsInsideBBox(t *testing.T) {
+	for _, k := range presetKeys() {
+		p := presets[k]
+		for _, poi := range p.POIs {
+			if poi.Lat < p.BBox.LatMin || poi.Lat > p.BBox.LatMax ||
+				poi.Lon < p.BBox.LonMin || poi.Lon > p.BBox.LonMax {
+				t.Errorf("%s: POI %q (%v, %v) is outside the bbox", k, poi.Name, poi.Lat, poi.Lon)
+			}
+		}
+		if len(p.POIs) == 0 {
+			t.Errorf("%s: no POIs — the map would be empty", k)
+		}
+	}
+}
+
+func TestMapGridEncoding(t *testing.T) {
+	g := newGrid(128, 64)
+	for y := 0; y < 64; y++ {
+		for x := 0; x < 128; x++ {
+			g.Data[y*128+x] = float32(x) // ramp west->east
+		}
+	}
+	min, max := g.minMax()
+	m := buildMapGrid(g, min, max)
+	if m.W != 64 || m.H != 32 {
+		t.Fatalf("map is %dx%d, want 64x32", m.W, m.H)
+	}
+	for _, row := range m.Rows {
+		if len(row) != m.W*2 {
+			t.Fatalf("row length %d, want %d", len(row), m.W*2)
+		}
+	}
+	// The ramp must decode back: west edge dark, east edge bright. The
+	// downscale averages neighbouring pixels, so allow it a few levels.
+	hex := func(s string) int64 { v, _ := strconv.ParseInt(s, 16, 32); return v }
+	first := hex(m.Rows[16][:2])
+	last := hex(m.Rows[16][len(m.Rows[16])-2:])
+	if first > 4 {
+		t.Errorf("west edge = %d, want near 0", first)
+	}
+	if last < 251 {
+		t.Errorf("east edge = %d, want near 255", last)
 	}
 }
