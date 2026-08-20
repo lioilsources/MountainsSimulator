@@ -33,11 +33,14 @@ type Sidecar struct {
 	// the Terrain Editor must match against Terrain.MaterialColors.
 	ColormapMaterials []MaterialUse `json:"colormap_materials,omitempty"`
 	POIs              []SidecarPOI  `json:"pois,omitempty"`
-	Map               *MapGrid      `json:"map,omitempty"`
-	Roblox            RobloxMeta    `json:"roblox"`
-	Source            string        `json:"source"`
-	Attribution       string        `json:"attribution"`
-	Generator         string        `json:"generator"`
+	// Strips are present when the arena exceeds the Import dialog's 2^32
+	// voxel region limit; each is imported separately, same Y size/position.
+	Strips      []Strip    `json:"strips,omitempty"`
+	Map         *MapGrid   `json:"map,omitempty"`
+	Roblox      RobloxMeta `json:"roblox"`
+	Source      string     `json:"source"`
+	Attribution string     `json:"attribution"`
+	Generator   string     `json:"generator"`
 }
 
 // RobloxMeta holds the import constants, versioned with the heightmap so a

@@ -30,7 +30,10 @@ nesmažeš nebo nepřejmenuješ; soubory s terénem jsou v .gitignore.
 1. `cd ../terrain-fetch && ./terrain-fetch --preset <klic>`
 2. Přegeneruj konstanty: `./terrain-fetch --emit-lua ../roblox/Mountains.lua`
 3. `cd ../roblox && ./build.sh <klic>`
-4. Ve Studiu naimportuj heightmapu podle [`IMPORT.md`](IMPORT.md).
+4. Ve Studiu naimportuj heightmapu podle [`IMPORT.md`](IMPORT.md). Plnovýškové
+   arény se importují **po pásech** (dialog má limit 2³² voxelů na region) —
+   tabulka pásů je tamtéž; před opakovaným importem smaž terén přes Command
+   Bar: `workspace.Terrain:Clear()`.
 5. Play. Když terén chybí, server vypíše do Output přesná čísla pro import.
 
 ## Ovládání

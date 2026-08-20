@@ -182,6 +182,13 @@ func run(o runOpts) error {
 	pois := projectPOIs(p.POIs, p.BBox, z, g, outMPP, rbx)
 	mapGrid := buildMapGrid(g, min, max)
 
+	strips := planStrips(rbx, th)
+	if strips != nil {
+		if err := writeStrips(base, g, strips, p.Palette, outMPP, min, max, o.colormap); err != nil {
+			return err
+		}
+	}
+
 	side := Sidecar{
 		Name: p.Name, Continent: p.Continent, Peak: p.Peak, PeakElevM: p.PeakElevM,
 		BBox:          [4]float64{p.BBox.LatMin, p.BBox.LonMin, p.BBox.LatMax, p.BBox.LonMax},
@@ -193,6 +200,7 @@ func run(o runOpts) error {
 		WidthM:      round1(widthM), HeightM: round1(heightM),
 		Heightmap: filepath.Base(heightPath),
 		POIs:      pois,
+		Strips:    strips,
 		Map:       &mapGrid,
 		Roblox:    rbx,
 		Source:    sourceName, Attribution: attribution,
@@ -209,6 +217,11 @@ func run(o runOpts) error {
 
 	fmt.Printf("  arena     %.0f x %.0f x %.0f studs  (vertical exaggeration %.2fx true scale)\n",
 		rbx.RegionSizeStuds[0], rbx.RegionSizeStuds[1], rbx.RegionSizeStuds[2], rbx.VerticalExaggeration)
+	if strips != nil {
+		fmt.Printf("  import    %.1f mld voxelu > limit 4.3 mld -> %d pasu podel Z (kazdy %.1f mld)\n",
+			float64(regionVoxels(rbx.RegionSizeStuds))/1e9, len(strips),
+			float64(strips[0].VoxelCount)/1e9)
+	}
 	fmt.Printf("  wrote     %s\n", heightPath)
 	if colorPath != "" {
 		fmt.Printf("            %s\n", colorPath)

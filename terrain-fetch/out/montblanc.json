@@ -123,6 +123,76 @@
       "z_studs": -152
     }
   ],
+  "strips": [
+    {
+      "heightmap": "montblanc-s1.png",
+      "colormap": "montblanc-s1-colormap.png",
+      "row0": 0,
+      "row1": 382,
+      "size_studs": [
+        16384,
+        2925.1,
+        4298.5
+      ],
+      "position_studs": [
+        0,
+        1462.6,
+        -6087.7
+      ],
+      "voxels": 3223142400
+    },
+    {
+      "heightmap": "montblanc-s2.png",
+      "colormap": "montblanc-s2-colormap.png",
+      "row0": 350,
+      "row1": 748,
+      "size_studs": [
+        16384,
+        2925.1,
+        4478.6
+      ],
+      "position_studs": [
+        0,
+        1462.6,
+        -2059.3
+      ],
+      "voxels": 3358064640
+    },
+    {
+      "heightmap": "montblanc-s3.png",
+      "colormap": "montblanc-s3-colormap.png",
+      "row0": 716,
+      "row1": 1114,
+      "size_studs": [
+        16384,
+        2925.1,
+        4478.6
+      ],
+      "position_studs": [
+        0,
+        1462.6,
+        2059.3
+      ],
+      "voxels": 3358064640
+    },
+    {
+      "heightmap": "montblanc-s4.png",
+      "colormap": "montblanc-s4-colormap.png",
+      "row0": 1082,
+      "row1": 1464,
+      "size_studs": [
+        16384,
+        2925.1,
+        4298.5
+      ],
+      "position_studs": [
+        0,
+        1462.6,
+        6087.7
+      ],
+      "voxels": 3223142400
+    }
+  ],
   "map": {
     "w": 64,
     "h": 64,

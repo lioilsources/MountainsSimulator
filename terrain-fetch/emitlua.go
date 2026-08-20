@@ -159,6 +159,36 @@ func emitImportMD(sidecarDir, outPath string) error {
 			a.S.Heightmap, r.TerrainHeightStuds, a.S.ReliefM, r.VerticalExaggeration)
 	}
 
+	anyStrips := false
+	for _, a := range arenas {
+		if len(a.S.Strips) > 0 {
+			anyStrips = true
+			break
+		}
+	}
+	if anyStrips {
+		b.WriteString("\n## Import po pasech\n\n")
+		b.WriteString("Import dialog odmita regiony nad 2^32 voxelu (16384 x 1024 x 16384\n")
+		b.WriteString("studu / 4^3). Plnovyske areny se proto importuji po pasech podel Z -\n")
+		b.WriteString("kazdy pas je vlastni PNG + vlastni Size/Position, poradi je jedno.\n")
+		b.WriteString("Pasy se o kousek prekryvaji, aby na svech nevznikaly bryzdy.\n")
+		b.WriteString("Y je u vsech pasu stejne - normalizace vysky je globalni.\n\n")
+		for _, a := range arenas {
+			if len(a.S.Strips) == 0 {
+				continue
+			}
+			fmt.Fprintf(&b, "### %s (%d pasy)\n\n", a.S.Name, len(a.S.Strips))
+			b.WriteString("| # | Heightmap | Colormap | Size (study) | Position (study) |\n|---|---|---|---|---|\n")
+			for i, st := range a.S.Strips {
+				fmt.Fprintf(&b, "| %d | `%s` | `%s` | `%g, %g, %g` | `%g, %g, %g` |\n",
+					i+1, st.Heightmap, st.Colormap,
+					st.SizeStuds[0], st.SizeStuds[1], st.SizeStuds[2],
+					st.PosStuds[0], st.PosStuds[1], st.PosStuds[2])
+			}
+			b.WriteString("\n")
+		}
+	}
+
 	b.WriteString("\n## Merítko\n\n")
 	b.WriteString("| Arena | Vyrez | m/px | study/m vodorovne | study/m svisle | Prelet Z-V |\n")
 	b.WriteString("|---|---|---|---|---|---|\n")

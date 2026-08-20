@@ -96,6 +96,93 @@
       "z_studs": -3214.5
     }
   ],
+  "strips": [
+    {
+      "heightmap": "aconcagua-s1.png",
+      "colormap": "aconcagua-s1-colormap.png",
+      "row0": 0,
+      "row1": 363,
+      "size_studs": [
+        16384,
+        3415.6,
+        4084.8
+      ],
+      "position_studs": [
+        0,
+        1707.8,
+        -7702.5
+      ],
+      "voxels": 3574939648
+    },
+    {
+      "heightmap": "aconcagua-s2.png",
+      "colormap": "aconcagua-s2-colormap.png",
+      "row0": 331,
+      "row1": 710,
+      "size_studs": [
+        16384,
+        3415.6,
+        4264.8
+      ],
+      "position_studs": [
+        0,
+        1707.8,
+        -3887.8
+      ],
+      "voxels": 3732348928
+    },
+    {
+      "heightmap": "aconcagua-s3.png",
+      "colormap": "aconcagua-s3-colormap.png",
+      "row0": 678,
+      "row1": 1057,
+      "size_studs": [
+        16384,
+        3415.6,
+        4264.8
+      ],
+      "position_studs": [
+        0,
+        1707.8,
+        16.9
+      ],
+      "voxels": 3732348928
+    },
+    {
+      "heightmap": "aconcagua-s4.png",
+      "colormap": "aconcagua-s4-colormap.png",
+      "row0": 1025,
+      "row1": 1404,
+      "size_studs": [
+        16384,
+        3415.6,
+        4264.8
+      ],
+      "position_studs": [
+        0,
+        1707.8,
+        3921.6
+      ],
+      "voxels": 3732348928
+    },
+    {
+      "heightmap": "aconcagua-s5.png",
+      "colormap": "aconcagua-s5-colormap.png",
+      "row0": 1372,
+      "row1": 1732,
+      "size_studs": [
+        16384,
+        3415.6,
+        4051
+      ],
+      "position_studs": [
+        0,
+        1707.8,
+        7719.4
+      ],
+      "voxels": 3543457792
+    }
+  ],
   "map": {
     "w": 54,
     "h": 64,

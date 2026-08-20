@@ -96,6 +96,76 @@
       "z_studs": -2639.9
     }
   ],
+  "strips": [
+    {
+      "heightmap": "kilimanjaro-s1.png",
+      "colormap": "kilimanjaro-s1-colormap.png",
+      "row0": 0,
+      "row1": 235,
+      "size_studs": [
+        16384,
+        3213,
+        3778.5
+      ],
+      "position_studs": [
+        0,
+        1606.5,
+        -5145.1
+      ],
+      "voxels": 3112058880
+    },
+    {
+      "heightmap": "kilimanjaro-s2.png",
+      "colormap": "kilimanjaro-s2-colormap.png",
+      "row0": 203,
+      "row1": 454,
+      "size_studs": [
+        16384,
+        3213,
+        4035.7
+      ],
+      "position_studs": [
+        0,
+        1606.5,
+        -1752.6
+      ],
+      "voxels": 3322822656
+    },
+    {
+      "heightmap": "kilimanjaro-s3.png",
+      "colormap": "kilimanjaro-s3-colormap.png",
+      "row0": 422,
+      "row1": 673,
+      "size_studs": [
+        16384,
+        3213,
+        4035.7
+      ],
+      "position_studs": [
+        0,
+        1606.5,
+        1768.6
+      ],
+      "voxels": 3322822656
+    },
+    {
+      "heightmap": "kilimanjaro-s4.png",
+      "colormap": "kilimanjaro-s4-colormap.png",
+      "row0": 641,
+      "row1": 875,
+      "size_studs": [
+        16384,
+        3213,
+        3762.4
+      ],
+      "position_studs": [
+        0,
+        1606.5,
+        5153.2
+      ],
+      "voxels": 3098886144
+    }
+  ],
   "map": {
     "w": 64,
     "h": 55,

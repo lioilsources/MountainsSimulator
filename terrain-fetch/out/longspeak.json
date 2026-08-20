@@ -87,6 +87,59 @@
       "z_studs": -1491.8
     }
   ],
+  "strips": [
+    {
+      "heightmap": "longspeak-s1.png",
+      "colormap": "longspeak-s1-colormap.png",
+      "row0": 0,
+      "row1": 462,
+      "size_studs": [
+        16384,
+        1601.4,
+        6497.3
+      ],
+      "position_studs": [
+        0,
+        800.7,
+        -6152.8
+      ],
+      "voxels": 2669056000
+    },
+    {
+      "heightmap": "longspeak-s2.png",
+      "colormap": "longspeak-s2-colormap.png",
+      "row0": 430,
+      "row1": 908,
+      "size_studs": [
+        16384,
+        1601.4,
+        6722.4
+      ],
+      "position_studs": [
+        0,
+        800.7,
+        7
+      ],
+      "voxels": 2761035776
+    },
+    {
+      "heightmap": "longspeak-s3.png",
+      "colormap": "longspeak-s3-colormap.png",
+      "row0": 876,
+      "row1": 1337,
+      "size_studs": [
+        16384,
+        1601.4,
+        6483.3
+      ],
+      "position_studs": [
+        0,
+        800.7,
+        6159.8
+      ],
+      "voxels": 2662486016
+    }
+  ],
   "map": {
     "w": 56,
     "h": 64,

@@ -114,6 +114,76 @@
       "z_studs": 3283.5
     }
   ],
+  "strips": [
+    {
+      "heightmap": "everest-s1.png",
+      "colormap": "everest-s1-colormap.png",
+      "row0": 0,
+      "row1": 264,
+      "size_studs": [
+        16384,
+        3946,
+        2970.7
+      ],
+      "position_studs": [
+        0,
+        1973,
+        -4084.7
+      ],
+      "voxels": 3003764736
+    },
+    {
+      "heightmap": "everest-s2.png",
+      "colormap": "everest-s2-colormap.png",
+      "row0": 232,
+      "row1": 512,
+      "size_studs": [
+        16384,
+        3946,
+        3150.8
+      ],
+      "position_studs": [
+        0,
+        1973,
+        -1384.1
+      ],
+      "voxels": 3185688576
+    },
+    {
+      "heightmap": "everest-s3.png",
+      "colormap": "everest-s3-colormap.png",
+      "row0": 480,
+      "row1": 760,
+      "size_studs": [
+        16384,
+        3946,
+        3150.8
+      ],
+      "position_studs": [
+        0,
+        1973,
+        1406.6
+      ],
+      "voxels": 3185688576
+    },
+    {
+      "heightmap": "everest-s4.png",
+      "colormap": "everest-s4-colormap.png",
+      "row0": 728,
+      "row1": 990,
+      "size_studs": [
+        16384,
+        3946,
+        2948.2
+      ],
+      "position_studs": [
+        0,
+        1973,
+        4096
+      ],
+      "voxels": 2983550976
+    }
+  ],
   "map": {
     "w": 64,
     "h": 44,

@@ -16,6 +16,60 @@ Pri `Position.Y = Size.Y/2` sedi nejnizsi bod areny presne na `Y = 0`.
 | Rocky Mountains | `16384, 1601.4, 18802.9` | `0, 800.7, 0` | `longspeak.png` | 1601 studu (2355 m) | 1.41x |
 | Mont Blanc | `16384, 2925.1, 16474` | `0, 1462.6, 0` | `montblanc.png` | 2925 studu (4302 m) | 1.61x |
 
+## Import po pasech
+
+Import dialog odmita regiony nad 2^32 voxelu (16384 x 1024 x 16384
+studu / 4^3). Plnovyske areny se proto importuji po pasech podel Z -
+kazdy pas je vlastni PNG + vlastni Size/Position, poradi je jedno.
+Pasy se o kousek prekryvaji, aby na svech nevznikaly bryzdy.
+Y je u vsech pasu stejne - normalizace vysky je globalni.
+
+### Aconcagua (5 pasy)
+
+| # | Heightmap | Colormap | Size (study) | Position (study) |
+|---|---|---|---|---|
+| 1 | `aconcagua-s1.png` | `aconcagua-s1-colormap.png` | `16384, 3415.6, 4084.8` | `0, 1707.8, -7702.5` |
+| 2 | `aconcagua-s2.png` | `aconcagua-s2-colormap.png` | `16384, 3415.6, 4264.8` | `0, 1707.8, -3887.8` |
+| 3 | `aconcagua-s3.png` | `aconcagua-s3-colormap.png` | `16384, 3415.6, 4264.8` | `0, 1707.8, 16.9` |
+| 4 | `aconcagua-s4.png` | `aconcagua-s4-colormap.png` | `16384, 3415.6, 4264.8` | `0, 1707.8, 3921.6` |
+| 5 | `aconcagua-s5.png` | `aconcagua-s5-colormap.png` | `16384, 3415.6, 4051` | `0, 1707.8, 7719.4` |
+
+### Everest (4 pasy)
+
+| # | Heightmap | Colormap | Size (study) | Position (study) |
+|---|---|---|---|---|
+| 1 | `everest-s1.png` | `everest-s1-colormap.png` | `16384, 3946, 2970.7` | `0, 1973, -4084.7` |
+| 2 | `everest-s2.png` | `everest-s2-colormap.png` | `16384, 3946, 3150.8` | `0, 1973, -1384.1` |
+| 3 | `everest-s3.png` | `everest-s3-colormap.png` | `16384, 3946, 3150.8` | `0, 1973, 1406.6` |
+| 4 | `everest-s4.png` | `everest-s4-colormap.png` | `16384, 3946, 2948.2` | `0, 1973, 4096` |
+
+### Kilimanjaro (4 pasy)
+
+| # | Heightmap | Colormap | Size (study) | Position (study) |
+|---|---|---|---|---|
+| 1 | `kilimanjaro-s1.png` | `kilimanjaro-s1-colormap.png` | `16384, 3213, 3778.5` | `0, 1606.5, -5145.1` |
+| 2 | `kilimanjaro-s2.png` | `kilimanjaro-s2-colormap.png` | `16384, 3213, 4035.7` | `0, 1606.5, -1752.6` |
+| 3 | `kilimanjaro-s3.png` | `kilimanjaro-s3-colormap.png` | `16384, 3213, 4035.7` | `0, 1606.5, 1768.6` |
+| 4 | `kilimanjaro-s4.png` | `kilimanjaro-s4-colormap.png` | `16384, 3213, 3762.4` | `0, 1606.5, 5153.2` |
+
+### Rocky Mountains (3 pasy)
+
+| # | Heightmap | Colormap | Size (study) | Position (study) |
+|---|---|---|---|---|
+| 1 | `longspeak-s1.png` | `longspeak-s1-colormap.png` | `16384, 1601.4, 6497.3` | `0, 800.7, -6152.8` |
+| 2 | `longspeak-s2.png` | `longspeak-s2-colormap.png` | `16384, 1601.4, 6722.4` | `0, 800.7, 7` |
+| 3 | `longspeak-s3.png` | `longspeak-s3-colormap.png` | `16384, 1601.4, 6483.3` | `0, 800.7, 6159.8` |
+
+### Mont Blanc (4 pasy)
+
+| # | Heightmap | Colormap | Size (study) | Position (study) |
+|---|---|---|---|---|
+| 1 | `montblanc-s1.png` | `montblanc-s1-colormap.png` | `16384, 2925.1, 4298.5` | `0, 1462.6, -6087.7` |
+| 2 | `montblanc-s2.png` | `montblanc-s2-colormap.png` | `16384, 2925.1, 4478.6` | `0, 1462.6, -2059.3` |
+| 3 | `montblanc-s3.png` | `montblanc-s3-colormap.png` | `16384, 2925.1, 4478.6` | `0, 1462.6, 2059.3` |
+| 4 | `montblanc-s4.png` | `montblanc-s4-colormap.png` | `16384, 2925.1, 4298.5` | `0, 1462.6, 6087.7` |
+
+
 ## Merítko
 
 | Arena | Vyrez | m/px | study/m vodorovne | study/m svisle | Prelet Z-V |

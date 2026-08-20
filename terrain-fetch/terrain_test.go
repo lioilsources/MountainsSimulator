@@ -429,3 +429,49 @@ func TestMapGridEncoding(t *testing.T) {
 		t.Errorf("east edge = %d, want near 255", last)
 	}
 }
+
+func TestPlanStrips(t *testing.T) {
+	// Beskydy-sized region fits in one import: no strips.
+	small := buildRobloxMeta(39763, 33409, 278, 1036, 0.68, 16384, 0)
+	if got := planStrips(small, 1346); got != nil {
+		t.Errorf("small region should not be striped, got %d strips", len(got))
+	}
+
+	// Everest-sized region must slice, every strip under the hard limit, and
+	// the union of rows must cover the whole heightmap.
+	big := buildRobloxMeta(49200, 33450, 2950, 5803, 0.68, 16384, 0)
+	strips := planStrips(big, 990)
+	if strips == nil {
+		t.Fatal("full-height arena must be striped")
+	}
+	covered := 0
+	for i, s := range strips {
+		if s.VoxelCount >= importVoxelLimit {
+			t.Errorf("strip %d has %d voxels, over the 2^32 limit", i, s.VoxelCount)
+		}
+		if i == 0 && s.Row0 != 0 {
+			t.Errorf("first strip starts at row %d, want 0", s.Row0)
+		}
+		if i == len(strips)-1 && s.Row1 != 990 {
+			t.Errorf("last strip ends at row %d, want 990", s.Row1)
+		}
+		if i > 0 && s.Row0 >= strips[i-1].Row1 {
+			t.Errorf("strip %d does not overlap its neighbour (%d >= %d)", i, s.Row0, strips[i-1].Row1)
+		}
+		covered += s.Row1 - s.Row0
+	}
+	if covered < 990 {
+		t.Errorf("strips cover %d rows of 990", covered)
+	}
+	// Strip Z extents must tile the arena: first starts at -sizeZ/2, last ends
+	// at +sizeZ/2.
+	first, last := strips[0], strips[len(strips)-1]
+	if math.Abs((first.PosStuds[2]-first.SizeStuds[2]/2)-(-big.RegionSizeStuds[2]/2)) > 1 {
+		t.Errorf("first strip north edge %v, want %v",
+			first.PosStuds[2]-first.SizeStuds[2]/2, -big.RegionSizeStuds[2]/2)
+	}
+	if math.Abs((last.PosStuds[2]+last.SizeStuds[2]/2)-(big.RegionSizeStuds[2]/2)) > 1 {
+		t.Errorf("last strip south edge %v, want %v",
+			last.PosStuds[2]+last.SizeStuds[2]/2, big.RegionSizeStuds[2]/2)
+	}
+}
