@@ -241,7 +241,7 @@ func resolvePreset(o runOpts) (Preset, error) {
 		}
 		return Preset{
 			Key: slug(name), Name: name, Continent: "", BBox: b, Zoom: z,
-			StudsPerMeterY: 0.15, Palette: "alpine",
+			StudsPerMeterY: verticalStudsPerMeter, Palette: "alpine",
 		}, nil
 	}
 	return Preset{}, fmt.Errorf("need --preset or --bbox (try --list)")

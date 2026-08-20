@@ -214,9 +214,13 @@ Studia (`PlatformContent/pc/terrain/materials.json`).
 **Cache dlaždic je na YOTTA**, `~/.cache/terrain-fetch` je symlink — boot SSD
 má volných jen ~46 GB.
 
-**Převýšení.** Konstanty study/m z plánu dávají arény 466–603 studů vysoké
-(sedí), ale proti vodorovnému měřítku 0.33–0.48 studu/m to znamená převýšení
-0.24–0.41 — hory jsou 2,5–4× placatější než ve skutečnosti. Je to důsledek
-kombinace „aréna 16k studů" + „výška ~450 studů", ne chyba. Čísla jsou
-v `roblox/IMPORT.md`; ke kalibraci slouží `--studs-per-meter-y` a
-`--arena-studs`.
+**Převýšení — pravidlo „všechny arény ~450 studů" zrušeno (2026-08-20).**
+Konstanty study/m z plánu výše dávaly převýšení 0.24–0.41: hory vycházely
+2,5–4× placatější než ve skutečnosti a létalo se nad planinou. Rozhodnutí:
+jednotná svislá konstanta **0.68 studu/m** pro všechny arény (v `presets.go`
+jako `verticalStudsPerMeter`), zvolená z řezu Mont Blancem jako „filmová" —
+~1.6× převýšení. Důsledky: arény mají 704–3946 studů výšky, převýšení
+1.4–2.0× podle vodorovného měřítka arény, a protože je konstanta sdílená,
+zůstává pravdivý poměr mezi pohořími — Everest (3946) opravdu ční nad
+Skalisté hory (1601). Letadlo se neškáluje: je to herní model, ne reference
+skutečnosti; rychlost si hráč volí plynem od kochání po slalom.

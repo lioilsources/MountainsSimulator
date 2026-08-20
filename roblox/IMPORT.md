@@ -9,23 +9,23 @@ Pri `Position.Y = Size.Y/2` sedi nejnizsi bod areny presne na `Y = 0`.
 
 | Arena | Size (study) | Position (study) | Heightmap | Vyska terenu | Prevyseni |
 |---|---|---|---|---|---|
-| Aconcagua | `16384, 602.8, 19489.8` | `0, 301.4, 0` | `aconcagua.png` | 603 studu (5023 m) | 0.34x |
-| Beskydy | `16384, 466, 13765.8` | `0, 233, 0` | `beskydy.png` | 466 studu (1036 m) | 1.09x |
-| Everest | `16384, 580.3, 11140.2` | `0, 290.2, 0` | `everest.png` | 580 studu (5803 m) | 0.30x |
-| Kilimanjaro | `16384, 472.5, 14068.7` | `0, 236.3, 0` | `kilimanjaro.png` | 472 studu (4725 m) | 0.24x |
-| Rocky Mountains | `16384, 471, 18802.9` | `0, 235.5, 0` | `longspeak.png` | 471 studu (2355 m) | 0.41x |
-| Mont Blanc | `16384, 516.2, 16474` | `0, 258.1, 0` | `montblanc.png` | 516 studu (4302 m) | 0.28x |
+| Aconcagua | `16384, 3415.6, 19489.8` | `0, 1707.8, 0` | `aconcagua.png` | 3416 studu (5023 m) | 1.94x |
+| Beskydy | `16384, 704.2, 13765.8` | `0, 352.1, 0` | `beskydy.png` | 704 studu (1036 m) | 1.65x |
+| Everest | `16384, 3946, 11140.2` | `0, 1973, 0` | `everest.png` | 3946 studu (5803 m) | 2.04x |
+| Kilimanjaro | `16384, 3213, 14068.7` | `0, 1606.5, 0` | `kilimanjaro.png` | 3213 studu (4725 m) | 1.61x |
+| Rocky Mountains | `16384, 1601.4, 18802.9` | `0, 800.7, 0` | `longspeak.png` | 1601 studu (2355 m) | 1.41x |
+| Mont Blanc | `16384, 2925.1, 16474` | `0, 1462.6, 0` | `montblanc.png` | 2925 studu (4302 m) | 1.61x |
 
 ## Merítko
 
 | Arena | Vyrez | m/px | study/m vodorovne | study/m svisle | Prelet Z-V |
 |---|---|---|---|---|---|
-| Aconcagua | 47 x 56 km | 32.1 | 0.350 | 0.12 | 2:17 min |
-| Beskydy | 40 x 33 km | 24.8 | 0.412 | 0.45 | 2:17 min |
-| Everest | 49 x 33 km | 33.8 | 0.333 | 0.10 | 2:17 min |
-| Kilimanjaro | 39 x 33 km | 38.2 | 0.421 | 0.10 | 2:17 min |
-| Rocky Mountains | 34 x 39 km | 29.2 | 0.482 | 0.20 | 2:17 min |
-| Mont Blanc | 39 x 39 km | 26.6 | 0.423 | 0.12 | 2:17 min |
+| Aconcagua | 47 x 56 km | 32.1 | 0.350 | 0.68 | 2:17 min |
+| Beskydy | 40 x 33 km | 24.8 | 0.412 | 0.68 | 2:17 min |
+| Everest | 49 x 33 km | 33.8 | 0.333 | 0.68 | 2:17 min |
+| Kilimanjaro | 39 x 33 km | 38.2 | 0.421 | 0.68 | 2:17 min |
+| Rocky Mountains | 34 x 39 km | 29.2 | 0.482 | 0.68 | 2:17 min |
+| Mont Blanc | 39 x 39 km | 26.6 | 0.423 | 0.68 | 2:17 min |
 
 **Prevyseni** je svisle merítko deleno vodorovnym: `1.00` = hora ma
 skutecne proporce, `0.30` = je splostela na tretinu. Sedi to s planem

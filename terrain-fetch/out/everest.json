@@ -52,20 +52,20 @@
   "roblox": {
     "region_size_studs": [
       16384,
-      580.3,
+      3946,
       11140.2
     ],
     "region_position_studs": [
       0,
-      290.2,
+      1973,
       0
     ],
     "studs_per_meter_xz": 0.3333,
-    "studs_per_meter_y": 0.1,
-    "terrain_height_studs": 580.3,
-    "vertical_exaggeration": 0.3,
+    "studs_per_meter_y": 0.68,
+    "terrain_height_studs": 3946,
+    "vertical_exaggeration": 2.0401,
     "meters_per_level": 0.0885,
-    "studs_per_level": 0.0089,
+    "studs_per_level": 0.0602,
     "base_elevation_m": 2950,
     "place_id": 0
   },
