@@ -17,8 +17,14 @@ local player = Players.LocalPlayer
 local camera = workspace.CurrentCamera
 local terrain = workspace.Terrain
 
--- Ktera arena je v tomhle Place. Server ji zapise do atributu, jinak fallback.
-local arenaKey = workspace:GetAttribute("ArenaKey") or "beskydy"
+-- Ktera arena je v tomhle Place zapisuje server (ArenaSetup) do atributu.
+-- Cekame na nej: tichy fallback by pri zavodu o replikaci prepocital cely
+-- svet konstantami cizi areny (spatny vyskomer, spatne POI, spatny strop).
+local arenaKey = workspace:GetAttribute("ArenaKey")
+while not arenaKey do
+	workspace:GetAttributeChangedSignal("ArenaKey"):Wait()
+	arenaKey = workspace:GetAttribute("ArenaKey")
+end
 local arena = Mountains.get(arenaKey) or Mountains.get(Mountains.order[1])
 
 -- === konstanty (DoggioWars, rychlosti v m/s) ==============================
@@ -539,9 +545,11 @@ local function step(dt)
 	local forward = orient.LookVector
 	pos = pos + (forward * (speed * SCALE * dt))
 
-	-- teren: skimming nabiji boost, naraz sebere rychlost
+	-- teren: skimming nabiji boost, naraz sebere rychlost. Dolni paprsek je
+	-- dlouhy kvuli vyskomeru (m nad zemi); blizkost se bere z jeho delky.
 	local hit = workspace:Raycast(pos, forward * (PROX_RANGE + speed * SCALE * dt), rayParams)
-	local down = workspace:Raycast(pos, Vector3.new(0, -PROX_RANGE, 0), rayParams)
+	local down = workspace:Raycast(pos, Vector3.new(0, -20000, 0), rayParams)
+	local nearGround = down ~= nil and down.Distance < PROX_RANGE
 	crashCooldown = math.max(0, crashCooldown - dt)
 
 	if hit and hit.Distance < 4 and crashCooldown <= 0 then
@@ -552,7 +560,7 @@ local function step(dt)
 		-- vytlacime nos ven z terenu, at se letadlo nezakousne
 		pos = pos + (hit.Normal * (5 - hit.Distance))
 		pitch = math.max(pitch, 0.15)
-	elseif (hit or down) and speed > 30 then
+	elseif (hit or nearGround) and speed > 30 then
 		proxTimer = proxTimer + (dt)
 		if proxTimer >= 0.2 then
 			proxTimer = 0
@@ -601,10 +609,9 @@ local function step(dt)
 
 	-- HUD: vyska nad morem z merítka areny, ne ze studu
 	local altM = Mountains.studsToMeters(arena, pos.Y - (arena.regionPosition.Y - arena.regionSize.Y / 2))
-	local groundM = down and Mountains.studsToMeters(arena,
-		down.Position.Y - (arena.regionPosition.Y - arena.regionSize.Y / 2)) or nil
+	local aglM = down and down.Distance / arena.studsPerMeterY or nil
 	altLabel.Text = string.format("ALT  %5d m n.m.%s", math.floor(altM),
-		groundM and string.format("   (%d m nad zemi)", math.max(0, math.floor(altM - groundM))) or "")
+		aglM and string.format("   (%d m nad zemi)", math.floor(aglM)) or "")
 	local mach = speed / MACH1
 	if mach >= 0.4 then
 		spdLabel.Text = string.format("SPD  %5.0f km/h   M %.2f", speed * 3.6, mach)

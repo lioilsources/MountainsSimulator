@@ -48,17 +48,31 @@ atmos.Decay = sky.fogColor
 atmos.Parent = Lighting
 
 -- === kontrola importu ====================================================
--- Terrain se importuje rucne v Terrain Editoru; bez nej by hrac letel nad
--- prazdnem a nepoznal proc, tak to rekneme nahlas.
+-- Teren se importuje rucne v Terrain Editoru a je to jedine misto, kde se
+-- muze rozejit s konstantami v Mountains.lua - vyskomer, mapa i POI pak
+-- prepocitavaji svet spatne. Proto teren skutecne ZMERIME: raycast na
+-- hlavni vrchol a porovnani s ocekavanou vyskou.
 task.spawn(function()
-	task.wait(2)
-	local extents = workspace.Terrain.MaxExtents
-	local filled = extents.Size.Magnitude > 1
-	if filled then
-		print(string.format(
-			"[MountainsSimulator] arena %s: teren nacten, rozsah %d x %d x %d studu",
-			arenaKey, extents.Size.X, extents.Size.Y, extents.Size.Z))
-	else
+	task.wait(3)
+
+	local rp = RaycastParams.new()
+	rp.FilterType = Enum.RaycastFilterType.Include
+	rp.FilterDescendantsInstances = { workspace.Terrain }
+
+	local top = arena.regionPosition.Y + arena.regionSize.Y / 2
+	local probeX, probeZ = arena.regionPosition.X, arena.regionPosition.Z
+	local expected
+	for _, p in ipairs(arena.pois or {}) do
+		if p.major then
+			probeX, probeZ, expected = p.pos.X, p.pos.Z, p.pos.Y
+			break
+		end
+	end
+
+	local origin = Vector3.new(probeX, top + 5000, probeZ)
+	local hit = workspace:Raycast(origin, Vector3.new(0, -(top + 10000), 0), rp)
+
+	if not hit then
 		warn(string.format(
 			"[MountainsSimulator] arena %s: WORKSPACE NEMA TEREN.\n" ..
 			"  Naimportuj %s v Terrain Editoru -> Import:\n" ..
@@ -68,6 +82,30 @@ task.spawn(function()
 			arenaKey, arena.heightmap,
 			arena.regionSize.X, arena.regionSize.Y, arena.regionSize.Z,
 			arena.regionPosition.X, arena.regionPosition.Y, arena.regionPosition.Z))
+		return
+	end
+
+	local actual = hit.Position.Y
+	if expected and math.abs(actual - expected) > expected * 0.08 + 40 then
+		warn(string.format(
+			"[MountainsSimulator] arena %s: NESOULAD MERITKA TERENU.\n" ..
+			"  Vrchol ma byt %d studu vysoko, teren tam ma %d studu.\n" ..
+			"  Vyskomer, mapa a POI pocitaji s importem Size Y=%d, Position Y=%d -\n" ..
+			"  teren je naimportovany s jinymi cisly. Oprava:\n" ..
+			"    1. Terrain Editor -> Edit -> Clear (smaz soucasny teren)\n" ..
+			"    2. Import %s: Size %d, %d, %d; Position %d, %d, %d\n" ..
+			"  Presna cisla jsou i v roblox/IMPORT.md.",
+			arenaKey, expected, actual,
+			arena.regionSize.Y, arena.regionPosition.Y,
+			arena.heightmap,
+			arena.regionSize.X, arena.regionSize.Y, arena.regionSize.Z,
+			arena.regionPosition.X, arena.regionPosition.Y, arena.regionPosition.Z))
+	elseif expected then
+		print(string.format(
+			"[MountainsSimulator] arena %s: meritko sedi (vrchol %d studu, cekano %d)",
+			arenaKey, actual, expected))
+	else
+		print(string.format("[MountainsSimulator] arena %s: teren nalezen (%d studu)", arenaKey, actual))
 	end
 end)
 
