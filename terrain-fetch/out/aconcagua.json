@@ -1,0 +1,93 @@
+{
+  "name": "Aconcagua",
+  "continent": "South America",
+  "peak": "Aconcagua",
+  "peak_elevation_m": 6961,
+  "bbox": [
+    -33,
+    -70.2,
+    -32.5,
+    -69.7
+  ],
+  "zoom": 12,
+  "min_elevation_m": 1917,
+  "max_elevation_m": 6940,
+  "relief_m": 5023,
+  "width_px": 1456,
+  "height_px": 1732,
+  "meters_per_pixel": 32.1433,
+  "width_m": 46800.6,
+  "height_m": 55672.1,
+  "heightmap": "aconcagua.png",
+  "colormap": "aconcagua-colormap.png",
+  "colormap_materials": [
+    {
+      "material": "Ground",
+      "rgb": [
+        102,
+        92,
+        59
+      ],
+      "percent": 52.7
+    },
+    {
+      "material": "Rock",
+      "rgb": [
+        102,
+        108,
+        111
+      ],
+      "percent": 39.5
+    },
+    {
+      "material": "Mud",
+      "rgb": [
+        58,
+        46,
+        36
+      ],
+      "percent": 6.7
+    },
+    {
+      "material": "Snow",
+      "rgb": [
+        195,
+        199,
+        218
+      ],
+      "percent": 1.1
+    },
+    {
+      "material": "Glacier",
+      "rgb": [
+        101,
+        176,
+        234
+      ],
+      "percent": 0.1
+    }
+  ],
+  "roblox": {
+    "region_size_studs": [
+      16384,
+      602.8,
+      19489.8
+    ],
+    "region_position_studs": [
+      0,
+      301.4,
+      0
+    ],
+    "studs_per_meter_xz": 0.3501,
+    "studs_per_meter_y": 0.12,
+    "terrain_height_studs": 602.8,
+    "vertical_exaggeration": 0.3428,
+    "meters_per_level": 0.0766,
+    "studs_per_level": 0.0092,
+    "base_elevation_m": 1917,
+    "place_id": 0
+  },
+  "source": "AWS Terrain Tiles, terrarium encoding",
+  "attribution": "Elevation: AWS Terrain Tiles (Mapzen) — SRTM (NASA/USGS), 3DEP (USGS), EU-DEM (EEA), GMTED2010. Public domain / CC-BY as per source.",
+  "generator": "terrain-fetch"
+}

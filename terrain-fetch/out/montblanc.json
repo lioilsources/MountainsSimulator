@@ -1,0 +1,102 @@
+{
+  "name": "Mont Blanc",
+  "continent": "Europe",
+  "peak": "Mont Blanc",
+  "peak_elevation_m": 4810,
+  "bbox": [
+    45.7,
+    6.6,
+    46.05,
+    7.1
+  ],
+  "zoom": 12,
+  "min_elevation_m": 488,
+  "max_elevation_m": 4790,
+  "relief_m": 4302,
+  "width_px": 1456,
+  "height_px": 1464,
+  "meters_per_pixel": 26.6087,
+  "width_m": 38742.3,
+  "height_m": 38955.2,
+  "heightmap": "montblanc.png",
+  "colormap": "montblanc-colormap.png",
+  "colormap_materials": [
+    {
+      "material": "Rock",
+      "rgb": [
+        102,
+        108,
+        111
+      ],
+      "percent": 36.3
+    },
+    {
+      "material": "Ground",
+      "rgb": [
+        102,
+        92,
+        59
+      ],
+      "percent": 31.3
+    },
+    {
+      "material": "Grass",
+      "rgb": [
+        106,
+        127,
+        63
+      ],
+      "percent": 21.4
+    },
+    {
+      "material": "Snow",
+      "rgb": [
+        195,
+        199,
+        218
+      ],
+      "percent": 6.8
+    },
+    {
+      "material": "LeafyGrass",
+      "rgb": [
+        115,
+        132,
+        74
+      ],
+      "percent": 3.7
+    },
+    {
+      "material": "Glacier",
+      "rgb": [
+        101,
+        176,
+        234
+      ],
+      "percent": 0.5
+    }
+  ],
+  "roblox": {
+    "region_size_studs": [
+      16384,
+      516.2,
+      16474
+    ],
+    "region_position_studs": [
+      0,
+      258.1,
+      0
+    ],
+    "studs_per_meter_xz": 0.4229,
+    "studs_per_meter_y": 0.12,
+    "terrain_height_studs": 516.2,
+    "vertical_exaggeration": 0.2838,
+    "meters_per_level": 0.0656,
+    "studs_per_level": 0.0079,
+    "base_elevation_m": 488.1,
+    "place_id": 0
+  },
+  "source": "AWS Terrain Tiles, terrarium encoding",
+  "attribution": "Elevation: AWS Terrain Tiles (Mapzen) — SRTM (NASA/USGS), 3DEP (USGS), EU-DEM (EEA), GMTED2010. Public domain / CC-BY as per source.",
+  "generator": "terrain-fetch"
+}

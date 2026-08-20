@@ -1,0 +1,14 @@
+.DS_Store
+*.swp
+*~
+__pycache__/
+
+# Go binary
+terrain-fetch/terrain-fetch
+
+# Vygenerovane rastry - jdou kdykoli znovu vyrobit z presetu + cache dlaždic.
+# Sidecar JSONy se naopak commituji: jsou to verzovane herni konstanty.
+terrain-fetch/out/*.png
+
+# Studio lock soubory
+roblox/*.rbxlx.lock

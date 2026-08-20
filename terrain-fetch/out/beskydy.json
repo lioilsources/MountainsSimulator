@@ -1,0 +1,75 @@
+{
+  "name": "Beskydy",
+  "continent": "Europe",
+  "peak": "Lysa hora",
+  "peak_elevation_m": 1323,
+  "bbox": [
+    49.35,
+    18.2,
+    49.65,
+    18.75
+  ],
+  "zoom": 12,
+  "min_elevation_m": 278,
+  "max_elevation_m": 1314,
+  "relief_m": 1036,
+  "width_px": 1602,
+  "height_px": 1346,
+  "meters_per_pixel": 24.8209,
+  "width_m": 39763.1,
+  "height_m": 33409,
+  "heightmap": "beskydy.png",
+  "colormap": "beskydy-colormap.png",
+  "colormap_materials": [
+    {
+      "material": "LeafyGrass",
+      "rgb": [
+        115,
+        132,
+        74
+      ],
+      "percent": 82.4
+    },
+    {
+      "material": "Grass",
+      "rgb": [
+        106,
+        127,
+        63
+      ],
+      "percent": 17.5
+    },
+    {
+      "material": "Rock",
+      "rgb": [
+        102,
+        108,
+        111
+      ],
+      "percent": 0
+    }
+  ],
+  "roblox": {
+    "region_size_studs": [
+      16384,
+      466,
+      13765.8
+    ],
+    "region_position_studs": [
+      0,
+      233,
+      0
+    ],
+    "studs_per_meter_xz": 0.412,
+    "studs_per_meter_y": 0.45,
+    "terrain_height_studs": 466,
+    "vertical_exaggeration": 1.0921,
+    "meters_per_level": 0.0158,
+    "studs_per_level": 0.0071,
+    "base_elevation_m": 278.2,
+    "place_id": 0
+  },
+  "source": "AWS Terrain Tiles, terrarium encoding",
+  "attribution": "Elevation: AWS Terrain Tiles (Mapzen) — SRTM (NASA/USGS), 3DEP (USGS), EU-DEM (EEA), GMTED2010. Public domain / CC-BY as per source.",
+  "generator": "terrain-fetch"
+}

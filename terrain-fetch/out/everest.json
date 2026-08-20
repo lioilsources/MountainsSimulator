@@ -1,0 +1,75 @@
+{
+  "name": "Everest",
+  "continent": "Asia",
+  "peak": "Mount Everest",
+  "peak_elevation_m": 8849,
+  "bbox": [
+    27.8,
+    86.6,
+    28.1,
+    87.1
+  ],
+  "zoom": 12,
+  "min_elevation_m": 2950,
+  "max_elevation_m": 8753,
+  "relief_m": 5803,
+  "width_px": 1456,
+  "height_px": 990,
+  "meters_per_pixel": 33.7606,
+  "width_m": 49155.4,
+  "height_m": 33423,
+  "heightmap": "everest.png",
+  "colormap": "everest-colormap.png",
+  "colormap_materials": [
+    {
+      "material": "Snow",
+      "rgb": [
+        195,
+        199,
+        218
+      ],
+      "percent": 64.7
+    },
+    {
+      "material": "Rock",
+      "rgb": [
+        102,
+        108,
+        111
+      ],
+      "percent": 34.6
+    },
+    {
+      "material": "Ground",
+      "rgb": [
+        102,
+        92,
+        59
+      ],
+      "percent": 0.7
+    }
+  ],
+  "roblox": {
+    "region_size_studs": [
+      16384,
+      580.3,
+      11140.2
+    ],
+    "region_position_studs": [
+      0,
+      290.2,
+      0
+    ],
+    "studs_per_meter_xz": 0.3333,
+    "studs_per_meter_y": 0.1,
+    "terrain_height_studs": 580.3,
+    "vertical_exaggeration": 0.3,
+    "meters_per_level": 0.0885,
+    "studs_per_level": 0.0089,
+    "base_elevation_m": 2950,
+    "place_id": 0
+  },
+  "source": "AWS Terrain Tiles, terrarium encoding",
+  "attribution": "Elevation: AWS Terrain Tiles (Mapzen) — SRTM (NASA/USGS), 3DEP (USGS), EU-DEM (EEA), GMTED2010. Public domain / CC-BY as per source.",
+  "generator": "terrain-fetch"
+}
