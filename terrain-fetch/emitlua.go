@@ -60,8 +60,12 @@ func emitLua(sidecarDir, outPath string) error {
 		if len(s.POIs) > 0 {
 			b.WriteString("\t\tpois = {\n")
 			for _, poi := range s.POIs {
-				fmt.Fprintf(&b, "\t\t\t{name = %q, elevM = %g, major = %v, pos = Vector3.new(%g, %g, %g)},\n",
-					poi.Name, poi.ElevM, poi.Major, poi.XStuds, poi.YStuds, poi.ZStuds)
+				town := ""
+				if poi.Town {
+					town = "town = true, "
+				}
+				fmt.Fprintf(&b, "\t\t\t{name = %q, elevM = %g, major = %v, %spos = Vector3.new(%g, %g, %g)},\n",
+					poi.Name, poi.ElevM, poi.Major, town, poi.XStuds, poi.YStuds, poi.ZStuds)
 			}
 			b.WriteString("\t\t},\n")
 		}

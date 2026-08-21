@@ -113,13 +113,25 @@ var presets = map[string]Preset{
 	"beskydy": {
 		Key: "beskydy", Name: "Beskydy", Continent: "Europe",
 		Peak: "Lysa hora", PeakElevM: 1323,
-		BBox:           BBox{LatMin: 49.35, LonMin: 18.20, LatMax: 49.65, LonMax: 18.75},
+		// Rozsireno na zapad (2026-08-21): Roznovska brazda s Valasskym
+		// Mezirici a Roznovem, Radhost, Verovicke vrchy, Frenstat, Koprivnice.
+		BBox:           BBox{LatMin: 49.35, LonMin: 17.94, LatMax: 49.65, LonMax: 18.75},
 		Zoom:           12,
 		StudsPerMeterY: verticalStudsPerMeter, Palette: "alpine",
+		// Souradnice vrcholu i sidel overene proti OSM/Nominatim (bounded
+		// query v bboxu, 2026-08-21).
 		POIs: []POI{
 			{Name: "Lysa hora", Lat: 49.5461, Lon: 18.4475, ElevM: 1323, Major: true},
 			{Name: "Smrk", Lat: 49.4993, Lon: 18.3730, ElevM: 1276},
-			{Name: "Travny", Lat: 49.5236, Lon: 18.5344, ElevM: 1203},
+			{Name: "Travny", Lat: 49.5616, Lon: 18.5070, ElevM: 1203},
+			{Name: "Radhost", Lat: 49.4916, Lon: 18.2231, ElevM: 1129},
+			{Name: "Velky Javornik", Lat: 49.5272, Lon: 18.1608, ElevM: 918},
+			{Name: "Cerna hora", Lat: 49.4783, Lon: 18.1971, ElevM: 886, SnapM: 250},
+			{Name: "Pindula", Lat: 49.4991, Lon: 18.1856, ElevM: 560, Town: true},
+			{Name: "Roznov p. R.", Lat: 49.4588, Lon: 18.1430, ElevM: 378, Town: true},
+			{Name: "Valasske Mezirici", Lat: 49.4716, Lon: 17.9716, ElevM: 294, Town: true},
+			{Name: "Frenstat p. R.", Lat: 49.5474, Lon: 18.2117, ElevM: 400, Town: true},
+			{Name: "Koprivnice", Lat: 49.5989, Lon: 18.1452, ElevM: 320, Town: true},
 		},
 	},
 }

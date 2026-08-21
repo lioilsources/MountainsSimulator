@@ -10,7 +10,7 @@ Pri `Position.Y = Size.Y/2` sedi nejnizsi bod areny presne na `Y = 0`.
 | Arena | Size (study) | Position (study) | Heightmap | Vyska terenu | Prevyseni |
 |---|---|---|---|---|---|
 | Aconcagua | `16384, 3415.6, 19489.8` | `0, 1707.8, 0` | `aconcagua.png` | 3416 studu (5023 m) | 1.94x |
-| Beskydy | `16384, 704.2, 13765.8` | `0, 352.1, 0` | `beskydy.png` | 704 studu (1036 m) | 1.65x |
+| Beskydy | `16384, 734.6, 9348.4` | `0, 367.3, 0` | `beskydy.png` | 735 studu (1080 m) | 2.43x |
 | Everest | `16384, 3946, 11140.2` | `0, 1973, 0` | `everest.png` | 3946 studu (5803 m) | 2.04x |
 | Kilimanjaro | `16384, 3213, 14068.7` | `0, 1606.5, 0` | `kilimanjaro.png` | 3213 studu (4725 m) | 1.61x |
 | Rocky Mountains | `16384, 1601.4, 18802.9` | `0, 800.7, 0` | `longspeak.png` | 1601 studu (2355 m) | 1.41x |
@@ -75,7 +75,7 @@ Y je u vsech pasu stejne - normalizace vysky je globalni.
 | Arena | Vyrez | m/px | study/m vodorovne | study/m svisle | Prelet Z-V |
 |---|---|---|---|---|---|
 | Aconcagua | 47 x 56 km | 32.1 | 0.350 | 0.68 | 2:17 min |
-| Beskydy | 40 x 33 km | 24.8 | 0.412 | 0.68 | 2:17 min |
+| Beskydy | 59 x 33 km | 24.8 | 0.280 | 0.68 | 2:17 min |
 | Everest | 49 x 33 km | 33.8 | 0.333 | 0.68 | 2:17 min |
 | Kilimanjaro | 39 x 33 km | 38.2 | 0.421 | 0.68 | 2:17 min |
 | Rocky Mountains | 34 x 39 km | 29.2 | 0.482 | 0.68 | 2:17 min |
@@ -95,7 +95,7 @@ takze importer prirazuje materialy bez dalsiho nastavovani. Zadne prechody
 ani dithering - michana barva by spadla na cizi material.
 
 - **Aconcagua**: Ground 53%, Rock 40%, Mud 7%, Snow 1%
-- **Beskydy**: LeafyGrass 82%, Grass 18%
+- **Beskydy**: LeafyGrass 88%, Grass 12%
 - **Everest**: Snow 65%, Rock 35%, Ground 1%
 - **Kilimanjaro**: LeafyGrass 46%, Ground 38%, Rock 8%, Sand 7%, Snow 1%
 - **Rocky Mountains**: Grass 62%, Rock 22%, LeafyGrass 16%

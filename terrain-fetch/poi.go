@@ -11,6 +11,14 @@ type POI struct {
 	// Major marks the marquee peaks (the eight-thousanders on Everest, the
 	// dominant summit elsewhere) — the game draws them gold.
 	Major bool
+	// Town marks settlements and saddles: no snapping to a local maximum
+	// (that would drag the marker onto the nearest hill), name shown without
+	// an elevation.
+	Town bool
+	// SnapM overrides the snap radius in metres (0 = the default). Use a
+	// small value for minor summits on the flank of a bigger ridge, where
+	// the default disc would climb onto the neighbour's slope.
+	SnapM float64
 }
 
 // SidecarPOI is a POI projected into the arena's stud coordinates.
@@ -21,6 +29,7 @@ type SidecarPOI struct {
 	// the gap against ElevM is the source's resolution, useful as a sanity check.
 	SnappedElevM float64 `json:"snapped_elevation_m"`
 	Major        bool    `json:"major"`
+	Town         bool    `json:"town,omitempty"`
 	XStuds       float64 `json:"x_studs"`
 	YStuds       float64 `json:"y_studs"`
 	ZStuds       float64 `json:"z_studs"`
@@ -54,11 +63,17 @@ func projectPOIs(pois []POI, b BBox, z int, g *Grid, outMPP float64, rbx RobloxM
 		}
 		px := int(fx * float64(g.W-1))
 		py := int(fy * float64(g.H-1))
-		px, py = snapToLocalMax(g, px, py, radiusPx)
+		if !p.Town {
+			r := radiusPx
+			if p.SnapM > 0 {
+				r = int(math.Round(p.SnapM / outMPP))
+			}
+			px, py = snapToLocalMax(g, px, py, r)
+		}
 		elev := float64(g.at(px, py))
 
 		out = append(out, SidecarPOI{
-			Name: p.Name, ElevM: p.ElevM,
+			Name: p.Name, ElevM: p.ElevM, Town: p.Town,
 			SnappedElevM: math.Round(elev),
 			Major:        p.Major,
 			XStuds:       round1((float64(px)/float64(g.W-1) - 0.5) * rbx.RegionSizeStuds[0]),

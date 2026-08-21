@@ -266,8 +266,8 @@ for _, p in ipairs(pois) do
 	l.Position = UDim2.new(0.5, 0, 0, 28)
 	l.BackgroundTransparency = 1
 	l.Font = Enum.Font.Code
-	l.Text = "^ " .. p.name
-	l.TextSize = 12
+	l.Text = (p.town and "o " or "^ ") .. p.name
+	l.TextSize = p.town and 11 or 12
 	l.TextColor3 = p.major and GOLD or GREY
 	l.TextStrokeTransparency = 0.5
 	l.Visible = false
@@ -318,8 +318,13 @@ local function updateCompass()
 		end
 	end
 	if bestPoi then
-		lookLabel.Text = string.format("%03d  |  %s  %d m - %.1f km",
-			math.floor(heading + 0.5) % 360, bestPoi.name, bestPoi.elevM, bestDist)
+		if bestPoi.town then
+			lookLabel.Text = string.format("%03d  |  %s - %.1f km",
+				math.floor(heading + 0.5) % 360, bestPoi.name, bestDist)
+		else
+			lookLabel.Text = string.format("%03d  |  %s  %d m - %.1f km",
+				math.floor(heading + 0.5) % 360, bestPoi.name, bestPoi.elevM, bestDist)
+		end
 	else
 		lookLabel.Text = string.format("%03d", math.floor(heading + 0.5) % 360)
 	end
@@ -391,7 +396,8 @@ local function buildMap()
 
 		local dot = Instance.new("Frame")
 		dot.AnchorPoint = Vector2.new(0.5, 0.5)
-		dot.Size = UDim2.fromOffset(p.major and 10 or 7, p.major and 10 or 7)
+		local dotPx = p.major and 10 or (p.town and 5 or 7)
+		dot.Size = UDim2.fromOffset(dotPx, dotPx)
 		dot.Position = UDim2.fromScale(fx, fy)
 		dot.BackgroundColor3 = p.major and GOLD or GREY
 		dot.BorderSizePixel = 0
@@ -407,8 +413,8 @@ local function buildMap()
 		tag.BackgroundTransparency = 1
 		tag.Font = Enum.Font.Code
 		tag.TextXAlignment = Enum.TextXAlignment.Left
-		tag.Text = string.format("%s %d", p.name, p.elevM)
-		tag.TextSize = p.major and 14 or 12
+		tag.Text = p.town and p.name or string.format("%s %d", p.name, p.elevM)
+		tag.TextSize = p.major and 14 or (p.town and 11 or 12)
 		tag.TextColor3 = p.major and GOLD or GREY
 		tag.TextStrokeTransparency = 0.2
 		tag.Parent = mapFrame
