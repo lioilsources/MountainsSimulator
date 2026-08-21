@@ -1,3 +1,3 @@
-module github.com/lioilsources/terrain-fetch
+module github.com/lioilsources/MountainsSimulator/terrain-fetch
 
 go 1.26
