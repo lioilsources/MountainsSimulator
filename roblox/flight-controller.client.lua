@@ -518,7 +518,9 @@ local function step(dt)
 	pitch = pitch + (math.clamp(targetPitch - pitch, -PITCH_RATE * dt, PITCH_RATE * dt))
 
 	-- automaticky naklon do zatacky
-	local targetRoll = math.clamp(-dYaw * 1.5, -BANK_MAX, BANK_MAX)
+	-- +yaw je zatacka doleva a kladny roll kolem +Z sklada leve kridlo dolu -
+	-- znamenko tu proto NENI (minus byl artefakt portu z Luanti, jine osy).
+	local targetRoll = math.clamp(dYaw * 1.5, -BANK_MAX, BANK_MAX)
 	roll = roll + (math.clamp(targetRoll - roll, -ROLL_SPEED * dt, ROLL_SPEED * dt))
 
 	-- strmhlav zrychluje, stoupani krvaci rychlost; plny plyn vykryje 70 %.
@@ -604,7 +606,9 @@ local function step(dt)
 		local lean = CFrame.Angles(0, 0, roll * 0.35)
 		camera.CFrame = CFrame.new(pos) * CFrame.fromEulerAnglesYXZ(pitch * 0.6, yaw, 0)
 			* lean * CFrame.new(0, 7, 34)
-		camera.CFrame = CFrame.lookAt(camera.CFrame.Position, pos + forward * 40)
+		-- Up-vektor trupu misto svetove Y: horizont se naklani se strojem
+		-- (lookAt bez nej roll zahazuje - proto driv obzor stal jako v Luanti).
+		camera.CFrame = CFrame.lookAt(camera.CFrame.Position, pos + forward * 40, orient.UpVector)
 	end
 
 	-- HUD: vyska nad morem z merítka areny, ne ze studu
