@@ -19,6 +19,8 @@ nesmažeš nebo nepřejmenuješ; soubory s terénem jsou v .gitignore.
 |---|---|
 | `flight-controller.client.lua` | letový model, kamera, HUD s výškoměrem |
 | `arena-setup.server.lua` | fog a osvětlení per pohoří, kontrola importu terénu |
+| `npc-spawner.server.lua` | rozsazuje postavičky z UGC továrny podle nadmořské výšky |
+| `tests/npc-spawner.lua` | headless test pásem a výběru postavy (`luajit roblox/tests/npc-spawner.lua`) |
 | `lobby.client.lua` | výběr kontinentu → `TeleportService` |
 | `Mountains.lua` | **generované** konstanty, POI vrcholů a mapový rastr ze sidecarů |
 | `update-place.py` | vymění skripty v uloženém place, terén nechá být |
@@ -68,6 +70,29 @@ ArenaSetup zachová a vyrobí zálohu `.bak`. Place nesmí být zrovna otevřen�
 ve Studiu. Kdyby v budoucnu přibyl **nový** skript (ne jen změna
 existujícího), updater ho nepřidá — musel by se vložit ve Studiu ručně,
 nebo znovu postavit place a přeimportovat terén.
+
+## Postavičky z UGC továrny
+
+`npc-spawner.server.lua` spawnuje modely vyrobené pipeline v UGCFactory
+(doména `characters`, plán `nas/docs/FANTASYCHARACTER_PLAN.md`). Sám o sobě
+nic nedělá — spí, dokud nedostane katalog, protože prázdná aréna je lepší
+než aréna plná chyb v Output.
+
+Katalog vezme z jednoho ze dvou míst:
+
+- **ModuleScript `FantasyCharacters`** v `ReplicatedStorage` — vrací seznam
+  `{ assetId = 123, biomes = {"meadow"}, animations = { idle = "rbxassetid://…" } }`
+- **atribut `CatalogUrl`** na samotném skriptu — pak si ten JSON stáhne přes
+  `HttpService` (v Game Settings musí být povolené HTTP requesty)
+
+Biom se počítá z **nadmořské výšky v metrech**, ne ze souřadnice Y: každá
+aréna má jinou `baseElevationM` i měřítko, takže stejné Y znamená v Beskydech
+něco jiného než na Everestu. Pásma jsou louky do 1500 m, les do 2500 m, výš
+skály. Položka bez `biomes` se spawnuje všude.
+
+Animace se přes Open Cloud nahrát nedají. `KeyframeSequence` se nahraje ručně
+jednou (kostra je pro všechny postavy z pipeline stejná) a její `animationId`
+se zapíše do katalogu.
 
 ## Varianta A: pět Places
 

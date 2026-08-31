@@ -25,6 +25,7 @@ HERE = pathlib.Path(__file__).parent
 SCRIPTS = {
     "FlightController": "flight-controller.client.lua",
     "ArenaSetup": "arena-setup.server.lua",
+    "NpcSpawner": "npc-spawner.server.lua",
     "Mountains": "Mountains.lua",
     "LobbyMenu": "lobby.client.lua",
 }
