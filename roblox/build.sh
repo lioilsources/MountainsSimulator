@@ -77,6 +77,7 @@ script_item ModuleScript RBXMTN Mountains Mountains.lua
 close_service
 open_service ServerScriptService RBXSSS
 script_item Script RBXARENA ArenaSetup "$ARENA_SRC"
+script_item Script RBXNPC NpcSpawner npc-spawner.server.lua
 close_service
 cat <<'XML'
 	<Item class="StarterPlayer" referent="RBXSP">
