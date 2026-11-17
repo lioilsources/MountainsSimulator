@@ -39,5 +39,5 @@ by na arénu 16k×14k studů znamenal miliardy voxelů. Čísla pro dialog vypí
 
 ## Cache
 
-Dlaždice: `~/.cache/terrain-fetch` → symlink na `/Volumes/YOTTA/Caches/terrain-fetch`
+Dlaždice: `~/.cache/terrain-fetch` → symlink na externí svazek (`$EXT_VOLUME/Caches/terrain-fetch`)
 (boot SSD je malý). Dlaždice jsou neměnné, cache se nikdy neinvaliduje.
